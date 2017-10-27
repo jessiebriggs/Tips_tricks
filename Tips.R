@@ -4,9 +4,6 @@ head(survey)
 summary(survey)
 dim(survey)
 
-rodents <- read.table ("rodent_timeseries.csv", sep = ",", header = T, stringsAsFactors = F)
-head(rodents)
-
 install.packages("gridExtra")
 
 library(ggplot2)
@@ -15,15 +12,14 @@ library(grid)
 
 plot1 <- ggplot(subset(survey[survey$sex != "", ]), aes(x = sex, y = hindfoot_length, group = sex, color = sex)) + 
   geom_boxplot() + 
-  labs(x = "Sex", y = "Hindfoot Length(mm)", title = "Rodents") + 
+  labs(x = "Sex", y = "Hindfoot Length(mm)", title = "Rodent weight by sex") + 
   theme(plot.title = element_text(hjust = 0.5))
 
 
-
-plot2 <-ggplot(data = rodents, aes(x = year, y = n, group = species_id, color = species_id)) + 
-  geom_line() + 
-  labs(color = "Species", x = "Year", y = "Number of Samples", title = "Rodents captured over time") + 
-  theme(plot.title = element_text(hjust = 0.5))
+plot2 <- ggplot(data = survey, aes(x = weight, y = hindfoot_length, color = species_id)) + 
+  geom_point(shape = 3) +
+  labs(x = "Weight(g)", y = "Hindfoot Length(mm)", title = "Weight and Hind Foot Length") + 
+  theme(plot.title = element_text(hjust = 0.5), legend.position = "none")
 
 grid.arrange(plot1, plot2, ncol=2,
              top = textGrob("Figure 1: Both the plots are here",
@@ -33,7 +29,9 @@ grid.arrange(plot1, plot2, ncol=2,
                             just = "left", # left-aligned,
                             gp = gpar(fontsize = 18) # bigger font
              ),
-             bottom = textGrob("Fig 1: these plots show the hind foot length by sex and number of samples per year for each species.",
+             bottom = textGrob("Fig 1: these plots show the hind foot length by sex and the correlation for weight and hind foot length.",
                                x = 0,
                                y = 0.5,
                                just = "left"))
+
+
